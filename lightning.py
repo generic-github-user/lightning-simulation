@@ -45,3 +45,25 @@ theta = np.angle(np.apply_along_axis(lambda a: complex(*a), 0, np.stack([u, v]))
 ax.quiver(x, y, u, v, theta, cmap='hsv')
 plt.axis('off')
 plt.show()
+
+
+# In[599]:
+
+
+R = 200
+particles = 5
+
+field = np.zeros([2, R, R])
+# charge = np.zeros([2, 30, 30])
+charge = np.random.uniform(R//4, R//4, [particles, 2])
+# simulate as particles?
+# for i in range(30):
+#     charge[:, tuple(np.random.randint([0,0], charge.shape[1:]))] = 1
+canvas = np.zeros([R, R])
+# flow = np.stack([u, v]).reshape([R, R, 2])
+kernel = [
+    [1,2,1],
+    [2,4,2],
+    [1,2,1],
+]
+kernel = (np.array(kernel)*2)**2
