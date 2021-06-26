@@ -10,3 +10,20 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 import numba as nb
+
+
+# In[28]:
+
+
+y
+
+
+# In[175]:
+
+
+resolution = 80
+R = resolution
+x, y = np.meshgrid(*[np.linspace(0, 1, R)]*2)
+
+u = np.sin(np.pi * x) * np.cos(np.pi * y)+np.random.normal(0, 0.1, [R, R])
+v = -np.cos(np.pi * x) * np.sin(np.pi * y)+np.random.normal(0, 0.1, [R, R])
