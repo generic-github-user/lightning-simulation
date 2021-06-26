@@ -67,3 +67,39 @@ kernel = [
     [1,2,1],
 ]
 kernel = (np.array(kernel)*2)**2
+
+# @nb.njit
+def clip(x, a=0, b=R-1):
+    return np.clip(a, b, x)
+    
+for i in range(600):
+    for c in range(charge.shape[0]):
+        d = charge[c]
+#         print(d, flow[tuple(clip(d.astype(np.int)))]*10)
+#         print(d)
+        
+        x, y = d
+        r2 = R//2
+        delta = np.array([-np.cos(np.pi * (x-r2) * np.random.normal(1, 0.001)), np.sin(np.pi * (y-r2) * np.random.normal(1, 0.001))])*1.4+np.random.normal(0.1, 0.0005)
+#         delta = np.random.normal(0.1, 0.1, [2])*3
+        charge[c] += delta #np.array()
+#         charge[c] += flow[tuple(clip(d.astype(np.int)))]*10
+        charge[c] = clip(charge[c])
+#         print(tuple(clip(charge[c].astype(np.int))))
+#         v = 1
+        v = np.linalg.norm(delta)
+#         canvas[tuple(clip(charge[c].astype(np.int)))] += v
+        z = clip(charge[c].astype(np.int))
+        A = tuple(z-1)
+        B = tuple(z+2)
+#         print(canvas[A[0]:B[0], A[1]:B[1]])
+        canvas[A[0]:B[0], A[1]:B[1]] += kernel * v
+
+plt.imshow(canvas**0.9, cmap='inferno')
+
+
+# In[ ]:
+
+
+
+
