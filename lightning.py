@@ -68,6 +68,19 @@ kernel = [
 ]
 kernel = (np.array(kernel)*2)**2
 
+span = np.linspace(-5, 5, 1) ** 3
+# kernel2 = np.meshgrid(span, span)
+# print(np.outer(span, span))
+# print(span@span.T)
+
+kernel2 = np.abs(np.outer(span, span))**0.01
+# span *= -1
+# kernel2 = np.add.outer(span, span) ** 2
+# kernel2 = kernel2.max()-kernel2
+kernel2 *= -1
+kernel2 -= kernel2.min()
+plt.imshow(kernel2)
+print(kernel2)
 # @nb.njit
 def clip(x, a=0, b=R-1):
     return np.clip(a, b, x)
@@ -90,12 +103,20 @@ for i in range(600):
         v = np.linalg.norm(delta)
 #         canvas[tuple(clip(charge[c].astype(np.int)))] += v
         z = clip(charge[c].astype(np.int))
-        A = tuple(z-1)
-        B = tuple(z+2)
+        A = tuple(z-kernel.shape[0]//2)
+        B = tuple(z+kernel.shape[1]//2+1)
 #         print(canvas[A[0]:B[0], A[1]:B[1]])
-        canvas[A[0]:B[0], A[1]:B[1]] += kernel * v
+#         print(kernel2 * v)
+#         canvas[A[0]:B[0], A[1]:B[1]] += kernel * v
+        canvas[tuple(z)] += v
 
-plt.imshow(canvas**0.9, cmap='inferno')
+plt.imshow(canvas**0.5, cmap='inferno')
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
