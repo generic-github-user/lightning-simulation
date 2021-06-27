@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[67]:
+# In[8]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
+import matplotlib
 import matplotlib.pyplot as plt
 # from mpl_toolkits.mplot3d import Axes3D
 
@@ -12,13 +13,7 @@ import numpy as np
 import numba as nb
 
 
-# In[28]:
-
-
-y
-
-
-# In[175]:
+# In[9]:
 
 
 resolution = 80
@@ -47,7 +42,8 @@ plt.axis('off')
 plt.show()
 
 
-# In[599]:
+# In[152]:
+
 
 
 R = 200
