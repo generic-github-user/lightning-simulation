@@ -46,16 +46,7 @@ plt.show()
 
 
 
-R = 200
-particles = 5
 
-field = np.zeros([2, R, R])
-# charge = np.zeros([2, 30, 30])
-charge = np.random.uniform(R//4, R//4, [particles, 2])
-# simulate as particles?
-# for i in range(30):
-#     charge[:, tuple(np.random.randint([0,0], charge.shape[1:]))] = 1
-canvas = np.zeros([R, R])
 # flow = np.stack([u, v]).reshape([R, R, 2])
 kernel = [
     [1,2,1],
@@ -77,20 +68,61 @@ kernel2 *= -1
 kernel2 -= kernel2.min()
 plt.imshow(kernel2)
 print(kernel2)
+
+
+# In[790]:
+
+
+R = 400
+particles = 20
+
+field = np.zeros([2, R, R])
+# charge = np.zeros([2, 30, 30])
+# charge = np.random.uniform(R//4, R//4, [particles, 2])
+source = np.random.uniform(0, R//2, [2])
+target = np.random.uniform(R//2, R, [2])
+noise = np.random.uniform(0., 1, [particles, 2])
+charge = np.full([particles, 2], source) + noise
+
+# simulate as particles?
+# for i in range(30):
+#     charge[:, tuple(np.random.randint([0,0], charge.shape[1:]))] = 1
+canvas = np.zeros([R, R])
+
 # @nb.njit
 def clip(x, a=0, b=R-1):
-    return np.clip(a, b, x)
-    
-for i in range(600):
+    return np.clip(x, a, b)
+
+# parametrize each particle separately?
+
+def gen_field():
+    t = np.random.normal(0., 5., [2])
+    def F(p):
+        return np.sin(p * t) * 0.5
+    return F
+
+F_main = gen_field()
+
+iterations = 200
+for i in range(iterations):
+    # TODO: continuously add more particles
+    # TODO: evolving parameters throughout simulation
     for c in range(charge.shape[0]):
-        d = charge[c]
+        C = charge[c]
 #         print(d, flow[tuple(clip(d.astype(np.int)))]*10)
 #         print(d)
         
         x, y = d
         r2 = R//2
-        delta = np.array([-np.cos(np.pi * (x-r2) * np.random.normal(1, 0.001)), np.sin(np.pi * (y-r2) * np.random.normal(1, 0.001))])*1.4+np.random.normal(0.1, 0.0005)
+        q = 0.001
+        w = 0.0001
+#         delta = np.array([-np.cos(np.pi * (x-r2) * np.random.normal(1, q)), np.sin(np.pi * (y-r2) * np.random.normal(1, q))])*1.4+np.random.normal(0.1, w)
 #         delta = np.random.normal(0.1, 0.1, [2])*3
+
+#         dist = np.linalg.norm(target - d)
+        dist = np.linalg.norm(target - C)
+        delta = ((target - C) / dist) * (200 / iterations) + F_main(C) + np.random.normal(0, 0.02, [2])
+
         charge[c] += delta #np.array()
 #         charge[c] += flow[tuple(clip(d.astype(np.int)))]*10
         charge[c] = clip(charge[c])
