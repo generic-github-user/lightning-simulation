@@ -96,6 +96,9 @@ def clip(x, a=0, b=R-1):
 # parametrize each particle separately?
 
 def gen_field():
+    """
+    Generate a function that takes a point and returns a vector representing a particle's motion; the function's parameters will be randomized once (when it is first created) using a function closure
+    """
     t = np.random.normal(0., 5., [2])
     def F(p):
         return np.sin(p * t) * 0.5
